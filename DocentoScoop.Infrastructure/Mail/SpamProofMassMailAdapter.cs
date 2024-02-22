@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DocentoScoop.Infrastructure.Mail
 {
     /// <summary>
-    /// 
+    /// W
     /// </summary>
     public class SpamProofMassMailAdapter : IExternalNotificationService
     {

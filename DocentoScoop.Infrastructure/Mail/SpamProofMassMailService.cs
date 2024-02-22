@@ -12,5 +12,6 @@ namespace DocentoScoop.Infrastructure.Mail
     public sealed class SpamProofMassMailService
     {
         public void SendSpamProofMail() => System.Console.WriteLine("Spam proof mail sent");
+        
     }
 }

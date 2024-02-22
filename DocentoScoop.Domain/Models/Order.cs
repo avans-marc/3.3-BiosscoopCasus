@@ -12,9 +12,9 @@ public class Order : IOrderContext, Interfaces.IObservable<IOrderContext>
     private readonly int _orderNr;
     private readonly bool _isStudentOrder;
 
-    private readonly List<MovieTicket> _tickets = new List<MovieTicket>();
-    private readonly IEnumerable<ITicketPriceRule> _ticketPriceRules = new List<ITicketPriceRule>();
-    private readonly List<Interfaces.IObserver<IOrderContext>> _observers = new List<Interfaces.IObserver<IOrderContext>>();
+    private readonly List<MovieTicket> _tickets;
+    private readonly IEnumerable<ITicketPriceRule> _ticketPriceRules;
+    private readonly List<Interfaces.IObserver<IOrderContext>> _observers;
 
     private IOrderState _currentState;
     private ContactMethod _contactMethod;
@@ -28,6 +28,8 @@ public class Order : IOrderContext, Interfaces.IObservable<IOrderContext>
         this._ticketPriceRules = ticketPriceRules;
 
         // Defaults
+        this._tickets = new List<MovieTicket>();
+        this._observers = new List<Interfaces.IObserver<IOrderContext>>();
         this._currentState = new OrderCreatedState(this);
         this._contactMethod = ContactMethod.Email;
     }

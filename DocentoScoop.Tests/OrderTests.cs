@@ -1,3 +1,4 @@
+using DocentoScoop.Domain.Exports;
 using DocentoScoop.Domain.Interfaces;
 using DocentoScoop.Domain.Models;
 using DocentoScoop.Domain.Rules;
@@ -9,8 +10,6 @@ namespace DocentoScoop.Tests
     [TestClass]
     public class OrderTests
     {
-
-
         [TestMethod]
         public void PerformOrderExport_ShouldInvokeOrderExporter_WhenCalleds()
         {
@@ -23,12 +22,49 @@ namespace DocentoScoop.Tests
             order.PerformOrderExporter();
 
             // Assert
-           orderExporter.Verify(x => x.Export(order), Times.Once);
+            orderExporter.Verify(x => x.Export(order), Times.Once);
+        }
 
+        [TestMethod]
+        public void PerformOrderExport_ShouldExportJson_WithoutErrors()
+        {
+            // Arrange
+            Order order = FakeOrderFactory.CreateFakeOrder(6, 10M, false, false, true);
+
+            // Act
+            order.SetOrderExporter(new OrderJsonExporter());
+            order.PerformOrderExporter();
+
+            // Assert
+            Assert.IsTrue(true); // Nothing to assert
         }
 
 
+        [TestMethod]
+        public void PerformOrderExport_ShouldExportPlainText_WithoutErrors()
+        {
+            // Arrange
+            Order order = FakeOrderFactory.CreateFakeOrder(6, 10M, false, false, true);
 
+            // Act
+            order.SetOrderExporter(new OrderPlainTextExporter());
+            order.PerformOrderExporter();
+
+            // Assert
+            Assert.IsTrue(true); // Nothing to assert
+        }
+
+        [TestMethod]
+        public void PerformOrderExport_ShouldThrowException_WhenNoExporterSet()
+        {
+            // Arrange
+            Order order = FakeOrderFactory.CreateFakeOrder(6, 10M, false, false, true);
+
+            // Act
+
+            // Assert
+            Assert.ThrowsException<InvalidOperationException>(order.PerformOrderExporter);
+        }
 
         [TestMethod]
         public void CalculatePrice_ShouldApplyDiscount_ForNonStudentOrderInTheWeekendOver6Tickets()
@@ -41,7 +77,6 @@ namespace DocentoScoop.Tests
 
             // Assert
             Assert.IsTrue(price == 54M);
-
         }
 
         [TestMethod]
@@ -55,7 +90,6 @@ namespace DocentoScoop.Tests
 
             // Assert
             Assert.IsTrue(price == 36M);
-
         }
 
         [TestMethod]
@@ -69,7 +103,6 @@ namespace DocentoScoop.Tests
 
             // Assert
             Assert.IsTrue(price == 20M);
-
         }
 
         [TestMethod]
@@ -83,11 +116,6 @@ namespace DocentoScoop.Tests
 
             // Assert
             Assert.IsTrue(price == 13M);
-
         }
-
-
-
-       
     }
 }
