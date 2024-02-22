@@ -2,8 +2,8 @@
 
 public class MovieScreening
 {
-    private DateTime dateAndTime;
-    private decimal pricePerSeat;
+    private readonly DateTime dateAndTime;
+    private readonly decimal pricePerSeat;
 
     public MovieScreening(Movie movie, DateTime dateAndTime, decimal pricePerSeat)
     {
@@ -11,20 +11,11 @@ public class MovieScreening
         this.pricePerSeat = pricePerSeat;
     }
 
-    public DateTime getDate()
-    {
-        return dateAndTime;
-    }
+    public DateTime getDate() => dateAndTime;
 
-    public decimal getPricePerSeat()
-    {
-        return pricePerSeat;
-    }
+    public decimal getPricePerSeat() => pricePerSeat;
 
-    public string toString()
-    {
-        return dateAndTime.ToString() + " " + pricePerSeat;
-    }
+    public string toString() => dateAndTime.ToString() + " " + pricePerSeat;
 }
 
 

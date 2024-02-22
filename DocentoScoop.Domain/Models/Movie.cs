@@ -10,14 +10,8 @@ public class Movie
         this.title = title;
     }
 
-    public void AddScreening(MovieScreening screening)
-    {
-        screenings.Add(screening);
-    }
+    public void AddScreening(MovieScreening screening) => screenings.Add(screening);
 
-    public override string ToString()
-    {
-        return title;
-    }
+    public override string ToString() => title;
 }
 

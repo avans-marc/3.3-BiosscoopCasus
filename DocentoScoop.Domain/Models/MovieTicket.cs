@@ -17,28 +17,16 @@ public class MovieTicket
         this.isPremium = isPremium;
     }
 
-    public bool IsPremiumTicket()
-    {
-        return isPremium;
-    }
+    public bool IsPremiumTicket() => isPremium;
 
-    public decimal GetPrice()
-    {
-        return movieScreening.getPricePerSeat();
-    }
+    public decimal GetPrice() => movieScreening.getPricePerSeat();
 
     public int GetSeatNr() => this.seatNr;
 
     public int GetRowNr() => this.rowNr;
 
-    public DateTime GetScreeningDate()
-    {
-        return movieScreening.getDate();
-    }
+    public DateTime GetScreeningDate() => movieScreening.getDate();
 
-    public bool IsWeekendScreening()
-    {
-        return this.GetScreeningDate().DayOfWeek == DayOfWeek.Sunday || this.GetScreeningDate().DayOfWeek == DayOfWeek.Saturday;
-    }
+    public bool IsWeekendScreening() => this.GetScreeningDate().DayOfWeek is DayOfWeek.Sunday or DayOfWeek.Saturday;
 
 }
