@@ -1,4 +1,4 @@
-﻿namespace DocentoScoop.Domain.Models.OrderState
+﻿namespace DocentoScoop.Domain.Interfaces
 {
     public interface IOrderState
     {
@@ -11,5 +11,7 @@
         public void CheckPayment(bool paid);
 
         public void Submit();
+
+        public bool IsNotifyable();
     }
 }

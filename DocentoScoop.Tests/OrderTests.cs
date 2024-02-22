@@ -1,7 +1,8 @@
-using DocentoScoop.Domain.Exports;
+using DocentoScoop.Domain.Interfaces;
 using DocentoScoop.Domain.Models;
 using DocentoScoop.Domain.Rules;
 using DocentoScoop.Domain.Tools;
+using Moq;
 
 namespace DocentoScoop.Tests
 {
@@ -11,32 +12,21 @@ namespace DocentoScoop.Tests
 
 
         [TestMethod]
-        public void Export_ShouldExecute_ForJson()
+        public void PerformOrderExport_ShouldInvokeOrderExporter_WhenCalleds()
         {
             // Arrange
-            Order order = CreateFakeOrder(6, 10M, false, false, true);
+            Mock<IOrderExporter> orderExporter = new Mock<IOrderExporter>();
+            Order order = FakeOrderFactory.CreateFakeOrder(6, 10M, false, false, true);
 
             // Act
-            order.Export(OrderExportFormat.JSON);
+            order.SetOrderExporter(orderExporter.Object);
+            order.PerformOrderExporter();
 
             // Assert
-            Assert.IsTrue(true);
+           orderExporter.Verify(x => x.Export(order), Times.Once);
 
         }
 
-        [TestMethod]
-        public void Export_ShouldExecute_ForPlainText()
-        {
-            // Arrange
-            Order order = CreateFakeOrder(6, 10M, false, false, true);
-
-            // Act
-            order.Export(OrderExportFormat.PLAINTEXT);
-
-            // Assert
-            Assert.IsTrue(true);
-
-        }
 
 
 
@@ -44,7 +34,7 @@ namespace DocentoScoop.Tests
         public void CalculatePrice_ShouldApplyDiscount_ForNonStudentOrderInTheWeekendOver6Tickets()
         {
             // Arrange
-            Order order = CreateFakeOrder(6, 10M, false, false, true);
+            Order order = FakeOrderFactory.CreateFakeOrder(6, 10M, false, false, true);
 
             // Act
             var price = order.CalculatePrice();
@@ -58,7 +48,7 @@ namespace DocentoScoop.Tests
         public void CalculatePrice_ShouldReturnFree_ForEverySecondPremiumStudentTicketInTheWeekends()
         {
             // Arrange
-            Order order = CreateFakeOrder(6, 10M, true, true, true);
+            Order order = FakeOrderFactory.CreateFakeOrder(6, 10M, true, true, true);
 
             // Act
             var price = order.CalculatePrice();
@@ -72,7 +62,7 @@ namespace DocentoScoop.Tests
         public void CalculatePrice_ShouldNotAddPremiumFee_ForNonPremiumTickets()
         {
             // Arrange
-            Order order = CreateFakeOrder(2, 10M, false, false, true);
+            Order order = FakeOrderFactory.CreateFakeOrder(2, 10M, false, false, true);
 
             // Act
             var price = order.CalculatePrice();
@@ -86,7 +76,7 @@ namespace DocentoScoop.Tests
         public void CalculatePrice_ShouldAddPremiumFee_ForNonStudentOrders()
         {
             // Arrange
-            Order order = CreateFakeOrder(2, 10M, true, false, false);
+            Order order = FakeOrderFactory.CreateFakeOrder(2, 10M, true, false, false);
 
             // Act
             var price = order.CalculatePrice();
@@ -96,21 +86,6 @@ namespace DocentoScoop.Tests
 
         }
 
-        private static Order CreateFakeOrder(int numberOfTickets, decimal basePrice, bool isPremium, bool isStudentOrder, bool isWeekend)
-        {
-            // Move to factory later
-            var ticketPriceRules = AssemblyScanner.GetInstancesOfType<ITicketPriceRule>();
-            var orderExporters = AssemblyScanner.GetInstancesOfType<IOrderExporter>();
-
-            Movie movie = new Movie("The Matrix");
-            
-            // Create a non-weekend movie screening
-            DateTime date = isWeekend ? new DateTime(2024, 1, 27, 19, 0, 0, DateTimeKind.Local) : new DateTime(2024, 1, 31, 19, 0, 0, DateTimeKind.Local);
-            MovieScreening movieScreening = new MovieScreening(movie, date, basePrice);
-            Order order = new Order(1, isStudentOrder, ticketPriceRules, orderExporters);
-            for (int i = 0; i < numberOfTickets; i++)
-                order.AddSeatReservation(new MovieTicket(movieScreening, 1, 1, isPremium));
-            return order;
-        }
+       
     }
 }

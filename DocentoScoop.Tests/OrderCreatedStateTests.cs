@@ -1,4 +1,5 @@
-﻿using DocentoScoop.Domain.Models.OrderState;
+﻿using DocentoScoop.Domain.Interfaces;
+using DocentoScoop.Domain.Models.OrderState;
 using Moq;
 using System;
 using System.Collections.Generic;

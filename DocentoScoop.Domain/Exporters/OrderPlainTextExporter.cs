@@ -1,4 +1,5 @@
-﻿using DocentoScoop.Domain.Models;
+﻿using DocentoScoop.Domain.Interfaces;
+using DocentoScoop.Domain.Models;
 using System.Text;
 
 namespace DocentoScoop.Domain.Exports
@@ -14,7 +15,5 @@ namespace DocentoScoop.Domain.Exports
 
             Console.WriteLine(sb.ToString());
         }
-
-        public OrderExportFormat Supports() => OrderExportFormat.PLAINTEXT;
     }
 }

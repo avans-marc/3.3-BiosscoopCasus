@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DocentoScoop.Domain.Interfaces;
 
 namespace DocentoScoop.Domain.Models.OrderState
 {
@@ -36,6 +37,8 @@ namespace DocentoScoop.Domain.Models.OrderState
         public void Submit() => throw new InvalidOperationException("Order reserved, cannot submit");
 
         public void SendTickets() => throw new InvalidOperationException("Order reserved, cannot send tickets unless order is paid");
-       
+
+        public bool IsNotifyable() => false;
+
     }
 }

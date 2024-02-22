@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DocentoScoop.Domain.Interfaces;
 
 namespace DocentoScoop.Domain.Models.OrderState
 {
@@ -27,6 +28,8 @@ namespace DocentoScoop.Domain.Models.OrderState
         
 
         public void SendTickets() => throw new InvalidOperationException("Order cancelled, cannot submit");
-        
+
+        public bool IsNotifyable() => false;
+
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace DocentoScoop.Domain.Models.OrderState
+﻿using DocentoScoop.Domain.Interfaces;
+
+namespace DocentoScoop.Domain.Models.OrderState
 {
     public class OrderPaidState : IOrderState
     {
@@ -26,6 +28,8 @@
 
 
         public void Submit() => throw new InvalidOperationException("Order paid, cannot submit");
-    
+
+        public bool IsNotifyable() => true;
+
     }
 }

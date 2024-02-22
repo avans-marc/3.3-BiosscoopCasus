@@ -5,7 +5,9 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocentoScoop.Domain", "DocentoScoop.Domain\DocentoScoop.Domain.csproj", "{5C465881-92CA-4FAA-AACA-C904DD1F85B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocentoScoop.Tests", "DocentoScoop.Tests\DocentoScoop.Tests.csproj", "{7E446255-AA4E-4507-AEE7-6594AC1C0DD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocentoScoop.Tests", "DocentoScoop.Tests\DocentoScoop.Tests.csproj", "{7E446255-AA4E-4507-AEE7-6594AC1C0DD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocentoScoop.Infrastructure", "DocentoScoop.Infrastructure\DocentoScoop.Infrastructure.csproj", "{5C225385-AFEA-4EBA-9E81-3193C74BD58D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7E446255-AA4E-4507-AEE7-6594AC1C0DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E446255-AA4E-4507-AEE7-6594AC1C0DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E446255-AA4E-4507-AEE7-6594AC1C0DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C225385-AFEA-4EBA-9E81-3193C74BD58D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C225385-AFEA-4EBA-9E81-3193C74BD58D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C225385-AFEA-4EBA-9E81-3193C74BD58D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C225385-AFEA-4EBA-9E81-3193C74BD58D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

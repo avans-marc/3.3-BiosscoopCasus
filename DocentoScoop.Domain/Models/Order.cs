@@ -1,71 +1,89 @@
-﻿using DocentoScoop.Domain.Exports;
+﻿using DocentoScoop.Domain.Interfaces;
 using DocentoScoop.Domain.Models.OrderState;
 using DocentoScoop.Domain.Rules;
-using DocentoScoop.Domain.Tools;
-using System.Linq.Expressions;
-using System.Text;
-using System.Text.Json.Nodes;
 
 namespace DocentoScoop.Domain.Models;
 
-public class Order : IOrderContext
+/// <summary>
+/// This class has become a design pattern zoo. Don't mind the mess and the noise, just enjoy watching the patterns.
+/// </summary>
+public class Order : IOrderContext, Interfaces.IObservable<IOrderContext>
 {
-    private readonly int orderNr;
-    private readonly bool isStudentOrder;
+    private readonly int _orderNr;
+    private readonly bool _isStudentOrder;
 
-    private readonly List<MovieTicket> tickets = new List<MovieTicket>();
-    private readonly IEnumerable<ITicketPriceRule> ticketPriceRules = new List<ITicketPriceRule>();
-    private readonly IEnumerable<IOrderExporter> orderExporters = new List<IOrderExporter>();
+    private readonly List<MovieTicket> _tickets = new List<MovieTicket>();
+    private readonly IEnumerable<ITicketPriceRule> _ticketPriceRules = new List<ITicketPriceRule>();
+    private readonly List<Interfaces.IObserver<IOrderContext>> _observers = new List<Interfaces.IObserver<IOrderContext>>();
 
-    private IOrderState? _currentState = null;
+    private IOrderState _currentState;
+    private ContactMethod _contactMethod;
+    private IOrderExporter? _orderExporter;
 
-
-    public Order(int orderNr, bool isStudentOrder, IEnumerable<ITicketPriceRule> ticketPriceRules, IEnumerable<IOrderExporter> orderExporters)
+    public Order(int orderNr, bool isStudentOrder, IEnumerable<ITicketPriceRule> ticketPriceRules)
     {
-        this.orderNr = orderNr;
-        this.isStudentOrder = isStudentOrder;
-        this.ticketPriceRules = ticketPriceRules;
-        this.orderExporters = orderExporters;
+        // Parameters
+        this._orderNr = orderNr;
+        this._isStudentOrder = isStudentOrder;
+        this._ticketPriceRules = ticketPriceRules;
 
+        // Defaults
         this._currentState = new OrderCreatedState(this);
+        this._contactMethod = ContactMethod.Email;
     }
 
-    public void SetState(IOrderState state) => this._currentState = state;
+    #region Setters/Getters
 
-    public int GetOrderNr()
+    public int GetOrderNr() => _orderNr;
+
+    public bool IsStudentOrder() => _isStudentOrder;
+
+    public int GetTicketCount() => _tickets.Count;
+
+    public ContactMethod GetPreferredContactMethod() => _contactMethod;
+
+    public void SetPreferredContactMethod(ContactMethod preferredContactMethod) => _contactMethod = preferredContactMethod;
+
+    public void AddSeatReservation(MovieTicket ticket) => _tickets.Add(ticket);
+
+    public IEnumerable<MovieTicket> GetTickets() => this._tickets;
+
+    public DateTime GetScreeningDate() => this._tickets.Select(x => x.GetScreeningDate()).OrderBy(x => x).First();
+
+    #endregion
+
+    #region Strategy Pattern Stuff
+
+    /// <summary>
+    /// Classic Strategy Pattern
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public void PerformOrderExporter()
     {
-        return orderNr;
+        if (this._orderExporter == null)
+            throw new InvalidOperationException($"No order export 'behavior' set");
+
+        this._orderExporter.Export(this);
     }
 
-    public bool IsStudentOrder()
-    {
-        return isStudentOrder;
-    }
+    public void SetOrderExporter(IOrderExporter orderExporter) => _orderExporter = orderExporter;
 
-    public int GetTicketCount()
-    {
-        return tickets.Count;
-    }
-
-    public void AddSeatReservation(MovieTicket ticket)
-    {
-        tickets.Add(ticket);
-    }
-
-    public IEnumerable<MovieTicket> GetTickets() => this.tickets;
-
-
+    /// <summary>
+    /// Strategy deluxe++, not letting the outside world
+    /// decide what strategy to use, but instead create open/close-proof price calculation rules
+    /// </summary>
+    /// <returns></returns>
     public decimal CalculatePrice()
     {
         decimal total = decimal.Zero;
 
-        for (int i = 0; i < tickets.Count; i++)
+        for (int i = 0; i < _tickets.Count; i++)
         {
-            var ticket = tickets[i];
+            var ticket = _tickets[i];
             var ticketPrice = ticket.GetPrice();
 
-            foreach (var pricingRule in this.ticketPriceRules)
-                if(ticketPrice > decimal.Zero)
+            foreach (var pricingRule in this._ticketPriceRules)
+                if (ticketPrice > decimal.Zero)
                     ticketPrice = pricingRule.CalculateNewPrice(ticketPrice, i + 1, ticket, this);
 
             total += ticketPrice;
@@ -74,19 +92,46 @@ public class Order : IOrderContext
         return total;
     }
 
-    public void Export(OrderExportFormat exportFormat)
-    {
-        var exporter = this.orderExporters.SingleOrDefault(x => x.Supports() == exportFormat);
-        if (exporter == null)
-            throw new InvalidOperationException($"No OrderExporter found for {exportFormat}");
+    #endregion Strategy Pattern Stuff
 
-        exporter.Export(this);
+    #region State Pattern Stuff
+
+    /// <summary>
+    /// The order doesn't care what state it is in.
+    /// Behavior and transitions are managed within the states
+    /// </summary>
+    /// <param name="state"></param>
+    public void SetState(IOrderState state)
+    {
+        this._currentState = state;
+        this.NotifyObservers();
     }
+
+    public IOrderState GetState() => _currentState;
 
     public void Submit() => this._currentState!.Submit();
 
     public void Change(/* some params here */) => this._currentState!.Change(/* some params here */);
 
-    public DateTime GetScreeningDate() => this.tickets.Select(x => x.GetScreeningDate()).OrderBy(x => x).First();
+    #endregion
+
+    #region Observable Pattern Stuff
+
+    /// <summary>
+    /// This is pretty generic solution, we also could wire it to other changes within the order
+    /// but for now we only stick to state changes.
+    /// </summary>
+    /// <param name="observer"></param>
+    public void Register(Interfaces.IObserver<IOrderContext> observer) => this._observers.Add(observer);
+
+    public void NotifyObservers()
+    {
+        foreach (var observer in _observers)
+            observer.Update(this);
+    }
+
+
+
+    #endregion
 
 }

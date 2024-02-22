@@ -1,4 +1,5 @@
-﻿using DocentoScoop.Domain.Models;
+﻿using DocentoScoop.Domain.Interfaces;
+using DocentoScoop.Domain.Models;
 using System.Text.Json.Nodes;
 
 namespace DocentoScoop.Domain.Exports
@@ -32,6 +33,5 @@ namespace DocentoScoop.Domain.Exports
       
         }
 
-        public OrderExportFormat Supports() => OrderExportFormat.JSON;
     }
 }

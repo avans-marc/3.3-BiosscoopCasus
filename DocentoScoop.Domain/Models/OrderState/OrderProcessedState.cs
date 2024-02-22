@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DocentoScoop.Domain.Interfaces;
 
 namespace DocentoScoop.Domain.Models.OrderState
 {
@@ -17,5 +18,8 @@ namespace DocentoScoop.Domain.Models.OrderState
         public void SendTickets() => throw new InvalidOperationException("Order is processed, your operation is futile");
 
         public void Submit() => throw new InvalidOperationException("Order is processed, your operation is futile");
+
+
+        public bool IsNotifyable() => false;
     }
 }
