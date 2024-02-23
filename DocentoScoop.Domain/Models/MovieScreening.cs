@@ -4,18 +4,20 @@ public class MovieScreening
 {
     private readonly DateTime dateAndTime;
     private readonly decimal pricePerSeat;
+    private readonly Movie movie;
 
-    public MovieScreening(Movie movie, DateTime dateAndTime, decimal pricePerSeat)
+    public MovieScreening(Movie movie,DateTime dateAndTime, decimal pricePerSeat)
     {
         this.dateAndTime = dateAndTime;
         this.pricePerSeat = pricePerSeat;
+        this.movie = movie;
     }
 
     public DateTime getDate() => dateAndTime;
 
     public decimal getPricePerSeat() => pricePerSeat;
 
-    public string toString() => dateAndTime.ToString() + " " + pricePerSeat;
+    public override string ToString() => $"{movie} | {getDate()} {getPricePerSeat()} | ";
 }
 
 

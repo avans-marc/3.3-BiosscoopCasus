@@ -29,4 +29,6 @@ public class MovieTicket
 
     public bool IsWeekendScreening() => this.GetScreeningDate().DayOfWeek is DayOfWeek.Sunday or DayOfWeek.Saturday;
 
+    public override string ToString() => $"{this.movieScreening.ToString()}: {GetRowNr()}{GetSeatNr()}";
+
 }

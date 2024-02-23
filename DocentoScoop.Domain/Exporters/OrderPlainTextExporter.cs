@@ -9,7 +9,7 @@ namespace DocentoScoop.Domain.Exports
         public void Export(Order order)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Order: {order.GetOrderNr()} | Price: {order.CalculatePrice():C2}");
+            sb.AppendLine($"Order: {order.GetOrderNr()} | Total Price : {order.CalculatePrice():C2}");
             foreach (MovieTicket ticket in order.GetTickets())
                 sb.AppendLine(ticket.ToString());
 

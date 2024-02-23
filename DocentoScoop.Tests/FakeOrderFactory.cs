@@ -19,10 +19,13 @@ namespace DocentoScoop.Tests
 
             Movie movie = new Movie("The Matrix");
 
-            // Create a non-weekend movie screening
+            // Create a movie screening
             DateTime date = isWeekend ? new DateTime(2024, 1, 27, 19, 0, 0, DateTimeKind.Local) : new DateTime(2024, 1, 31, 19, 0, 0, DateTimeKind.Local);
             MovieScreening movieScreening = new MovieScreening(movie, date, basePrice);
             Order order = new Order(1, isStudentOrder, ticketPriceRules);
+
+            movie.AddScreening(movieScreening);
+            
             for (int i = 0; i < numberOfTickets; i++)
                 order.AddSeatReservation(new MovieTicket(movieScreening, 1, 1, isPremium));
 
